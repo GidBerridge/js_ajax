@@ -335,20 +335,32 @@ const getPosition = function() {
 
 
 const whereamI = async function(country) {
+    try {
     // Geolocation
     const pos = await getPosition();
     const {latitude: lat, longitude: lng} = pos.coords;
     
     // Reverese geocoding
     const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+    if(!resGeo.ok) throw new Error('Problem getting location data')
+    
     const dataGeo = await resGeo.json();
     console.log(dataGeo);
 
     // Country data
     const res = await fetch(`https://restcountries.com/v2/name/${dataGeo.country}`);
-    // console.log(res);
+    if(!resGeo.ok) throw new Error('Problem getting country')
+
     const data = await res.json()
     renderCountry(data[0]);
+    } catch(err) {
+        console.error(`${err} 💥`);
+        renderCountry(`Something went wrong 💥 ${err.message}`)
+    }
 }
 whereamI();
+whereamI();
+whereamI();
+whereamI();
 console.log('FIRST');
+
